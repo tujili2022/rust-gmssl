@@ -1,6 +1,6 @@
 [package]
 name = "gmssl"
-version = "0.1.0"
+version = "0.1.3"
 authors = ["Jason Honor<jasonhonor@outlook.com>"]
 license = "MIT/Apache-2.0"
 description = "GmSSL bindings"
@@ -30,7 +30,7 @@ libc = "0.2"
 once_cell = "1.5.2"
 
 gmssl-macros = { version = "0.1" }
-ffi = { git = "https://github.com/tujili2022/rust-gmssl.git", package = "gmssl-sys", version = "0.1" }
+ffi = { git = "https://github.com/tujili2022/rust-gmssl.git", package = "gmssl-sys", version = "0.1.3" }
 #gmssl-sys = { version = "0.1" }
 
 [dev-dependencies]
