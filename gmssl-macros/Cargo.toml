@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2018"
 license = "MIT/Apache-2.0"
 description = "Internal macros used by the gmssl crate."
-repository = "https://github.com/acovo/rust-gmssl"
+repository = "https://github.com/tujili2022/rust-gmssl.git"
 
 [lib]
 proc-macro = true

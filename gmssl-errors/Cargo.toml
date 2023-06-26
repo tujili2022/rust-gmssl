@@ -5,7 +5,7 @@ authors = ["Jason Honor<jasonhonor@outlook.com>"]
 edition = "2018"
 license = "MIT/Apache-2.0"
 description = "Custom error library support for the gmssl crate."
-repository = "https://github.com/acovo/rust-gmssl"
+repository = "https://github.com/tujili2022/rust-gmssl.git"
 readme = "README.md"
 categories = ["api-bindings"]
 

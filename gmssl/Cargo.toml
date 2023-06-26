@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Jason Honor<jasonhonor@outlook.com>"]
 license = "MIT/Apache-2.0"
 description = "GmSSL bindings"
-repository = "https://github.com/acovo/rust-gmssl"
+repository = "https://github.com/tujili2022/rust-gmssl.git"
 readme = "README.md"
 keywords = ["crypto", "tls", "ssl", "dtls"]
 categories = ["cryptography", "api-bindings"]
@@ -30,7 +30,7 @@ libc = "0.2"
 once_cell = "1.5.2"
 
 gmssl-macros = { version = "0.1" }
-ffi = { package = "gmssl-sys", version = "0.1" }
+ffi = { git = "https://github.com/tujili2022/rust-gmssl.git", package = "gmssl-sys", version = "0.1" }
 #gmssl-sys = { version = "0.1" }
 
 [dev-dependencies]
