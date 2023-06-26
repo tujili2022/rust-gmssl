@@ -75,7 +75,7 @@ impl SslConnector {
         let mut ctx = ctx(method)?;
         ctx.set_default_verify_paths()?;
         ctx.set_cipher_list(
-            "DEFAULT:!aNULL:!eNULL:!MD5:!3DES:!DES:!RC4:!IDEA:!SEED:!aDSS:!SRP:!PSK",
+            "ALL:!NULL-MD5:!NULL-SHA:!NULL-RSA",
         )?;
         setup_verify(&mut ctx);
 
