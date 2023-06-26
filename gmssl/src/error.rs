@@ -111,53 +111,54 @@ unsafe impl Send for Error {}
 impl Error {
     /// Returns the first error on the OpenSSL error stack.
     pub fn get() -> Option<Error> {
-        unsafe {
-            ffi::init();
+        None
+        // unsafe {
+        //     ffi::init();
 
-            let mut file = ptr::null();
-            let mut line = 0;
-            let mut func = ptr::null();
-            let mut data = ptr::null();
-            let mut flags = 0;
-            match ERR_get_error_all(&mut file, &mut line, &mut func, &mut data, &mut flags) {
-                0 => None,
-                code => {
-                    // The memory referenced by data is only valid until that slot is overwritten
-                    // in the error stack, so we'll need to copy it off if it's dynamic
-                    let data = if flags & ffi::ERR_TXT_STRING != 0 {
-                        let bytes = CStr::from_ptr(data as *const _).to_bytes();
-                        let data = str::from_utf8(bytes).unwrap();
-                        #[cfg(not(boringssl))]
-                        let data = if flags & ffi::ERR_TXT_MALLOCED != 0 {
-                            Cow::Owned(data.to_string())
-                        } else {
-                            Cow::Borrowed(data)
-                        };
-                        #[cfg(boringssl)]
-                        let data = Cow::Borrowed(data);
-                        Some(data)
-                    } else {
-                        None
-                    };
+        //     let mut file = ptr::null();
+        //     let mut line = 0;
+        //     let mut func = ptr::null();
+        //     let mut data = ptr::null();
+        //     let mut flags = 0;
+        //     match ERR_get_error_all(&mut file, &mut line, &mut func, &mut data, &mut flags) {
+        //         0 => None,
+        //         code => {
+        //             // The memory referenced by data is only valid until that slot is overwritten
+        //             // in the error stack, so we'll need to copy it off if it's dynamic
+        //             let data = if flags & ffi::ERR_TXT_STRING != 0 {
+        //                 let bytes = CStr::from_ptr(data as *const _).to_bytes();
+        //                 let data = str::from_utf8(bytes).unwrap();
+        //                 #[cfg(not(boringssl))]
+        //                 let data = if flags & ffi::ERR_TXT_MALLOCED != 0 {
+        //                     Cow::Owned(data.to_string())
+        //                 } else {
+        //                     Cow::Borrowed(data)
+        //                 };
+        //                 #[cfg(boringssl)]
+        //                 let data = Cow::Borrowed(data);
+        //                 Some(data)
+        //             } else {
+        //                 None
+        //             };
 
-                    let file = ShimStr::new(file);
+        //             let file = ShimStr::new(file);
 
-                    let func = if func.is_null() {
-                        None
-                    } else {
-                        Some(ShimStr::new(func))
-                    };
+        //             let func = if func.is_null() {
+        //                 None
+        //             } else {
+        //                 Some(ShimStr::new(func))
+        //             };
 
-                    Some(Error {
-                        code,
-                        file,
-                        line,
-                        func,
-                        data,
-                    })
-                }
-            }
-        }
+        //             Some(Error {
+        //                 code,
+        //                 file,
+        //                 line,
+        //                 func,
+        //                 data,
+        //             })
+        //         }
+        //     }
+        // }
     }
 
     /// Pushes the error back onto the OpenSSL error stack.
@@ -342,7 +343,7 @@ impl error::Error for Error {}
 cfg_if! {
     if #[cfg(ossl300)] {
         use std::ffi::{CString};
-        use ffi::ERR_get_error_all;
+        //use ffi::ERR_get_error_all;
 
         type RetStr<'a> = &'a str;
 
@@ -363,18 +364,18 @@ cfg_if! {
             }
         }
     } else {
-        #[allow(bad_style)]
-        unsafe extern "C" fn ERR_get_error_all(
-            file: *mut *const c_char,
-            line: *mut c_int,
-            func: *mut *const c_char,
-            data: *mut *const c_char,
-            flags: *mut c_int,
-        ) -> ErrType {
-            let code = ffi::ERR_get_error_line_data(file, line, data, flags);
-            *func = ffi::ERR_func_error_string(code);
-            code
-        }
+        // #[allow(bad_style)]
+        // unsafe extern "C" fn ERR_get_error_all(
+        //     file: *mut *const c_char,
+        //     line: *mut c_int,
+        //     func: *mut *const c_char,
+        //     data: *mut *const c_char,
+        //     flags: *mut c_int,
+        // ) -> ErrType {
+        //     let code = ffi::ERR_get_error_line_data(file, line, data, flags);
+        //     *func = ffi::ERR_func_error_string(code);
+        //     code
+        // }
 
         type RetStr<'a> = &'static str;
 

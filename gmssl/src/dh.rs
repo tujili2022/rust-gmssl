@@ -318,7 +318,7 @@ mod tests {
 
     #[test]
     fn test_dh_params() {
-        let mut ctx = SslContext::builder(SslMethod::tls()).unwrap();
+        let mut ctx = SslContext::builder(SslMethod::gm_tls()).unwrap();
         let prime_p = BigNum::from_hex_str(
             "87A8E61DB4B6663CFFBBD19C651959998CEEF608660DD0F25D2CEED4435E3B00E00DF8F1D61957D4FAF7DF\
              4561B2AA3016C3D91134096FAA3BF4296D830E9A7C209E0C6497517ABD5A8A9D306BCF67ED91F9E6725B47\

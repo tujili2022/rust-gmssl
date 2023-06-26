@@ -351,6 +351,11 @@ impl SslMethod {
         unsafe { SslMethod(TLS_client_method()) }
     }
 
+
+    pub fn gm_tls_client() -> SslMethod {
+        unsafe { SslMethod(GMTLS_method()) }
+    }
+
     /// Support all versions of the TLS protocol, explicitly as a server.
     #[corresponds(TLS_server_method)]
     pub fn tls_server() -> SslMethod {
@@ -4056,11 +4061,11 @@ cfg_if! {
 }
 cfg_if! {
     if #[cfg(any(boringssl, ossl110, libressl291))] {
-        use ffi::{TLS_method, DTLS_method, TLS_client_method, TLS_server_method};
+        use ffi::{TLS_method,GMTLS_method, DTLS_method, TLS_client_method, TLS_server_method};
     } else {
         use ffi::{
             SSLv23_method as TLS_method, DTLSv1_method as DTLS_method, SSLv23_client_method as TLS_client_method,
-            SSLv23_server_method as TLS_server_method,
+            SSLv23_server_method as TLS_server_method, GMTLS_method as GMTLS_method,
         };
     }
 }
