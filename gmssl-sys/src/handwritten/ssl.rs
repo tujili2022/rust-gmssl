@@ -674,8 +674,6 @@ cfg_if! {
         extern "C" {
             pub fn TLS_method() -> *const SSL_METHOD;
 
-            pub fn GMTLS_method() -> *const SSL_METHOD;
-
             pub fn DTLS_method() -> *const SSL_METHOD;
 
             pub fn TLS_server_method() -> *const SSL_METHOD;
