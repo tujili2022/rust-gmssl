@@ -714,6 +714,10 @@ impl SslContextBuilder {
     pub fn new(method: SslMethod) -> Result<SslContextBuilder, ErrorStack> {
         unsafe {
             init();
+            println!("rust openssl init finished!");
+            if method.as_ptr().is_null(){
+                println!("rust openssl method is none!");
+            }
             let ctx = cvt_p(ffi::SSL_CTX_new(method.as_ptr()))?;
 
             Ok(SslContextBuilder::from_ptr(ctx))
@@ -738,7 +742,8 @@ impl SslContextBuilder {
     #[corresponds(SSL_CTX_set_verify)]
     pub fn set_verify(&mut self, mode: SslVerifyMode) {
         unsafe {
-            ffi::SSL_CTX_set_verify(self.as_ptr(), mode.bits as c_int, None);
+            print!("we should not very cert!");
+            ffi::SSL_CTX_set_verify(self.as_ptr(),  ffi::SSL_VERIFY_NONE , Some(very_cert));
         }
     }
 
