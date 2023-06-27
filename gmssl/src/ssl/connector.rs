@@ -72,13 +72,13 @@ impl SslConnector {
     ///
     /// The default configuration is subject to change, and is currently derived from Python.
     pub fn builder(method: SslMethod) -> Result<SslConnectorBuilder, ErrorStack> {
+        println!("rust openssl start ctx create");
         let mut ctx = ctx(method)?;
-        ctx.set_default_verify_paths()?;
+        println!("rust openssl ctx created");
+        setup_verify(&mut ctx);
         ctx.set_cipher_list(
             "ALL:!NULL-MD5:!NULL-SHA:!NULL-RSA",
         )?;
-        setup_verify(&mut ctx);
-
         Ok(SslConnectorBuilder(ctx))
     }
 
@@ -387,9 +387,9 @@ cfg_if! {
 cfg_if! {
     if #[cfg(any(ossl102, libressl261))] {
         fn setup_verify(ctx: &mut SslContextBuilder) {
-            ctx.set_verify(SslVerifyMode::PEER);
+            println!("ignore cert very with NONE");
+            ctx.set_verify(SslVerifyMode::NONE);
         }
-
         fn setup_verify_hostname(ssl: &mut SslRef, domain: &str) -> Result<(), ErrorStack> {
             use crate::x509::verify::X509CheckFlags;
 
@@ -402,6 +402,7 @@ cfg_if! {
         }
     } else {
         fn setup_verify(ctx: &mut SslContextBuilder) {
+            println!("ignore cert very with verify_callback");
             ctx.set_verify_callback(SslVerifyMode::PEER, verify::verify_callback);
         }
 
@@ -434,6 +435,8 @@ cfg_if! {
             }
 
             pub fn verify_callback(preverify_ok: bool, x509_ctx: &mut X509StoreContextRef) -> bool {
+                println!("gmssl openssl always allow connect");
+                return  true;
                 if !preverify_ok || x509_ctx.error_depth() != 0 {
                     return preverify_ok;
                 }

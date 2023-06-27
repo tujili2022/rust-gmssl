@@ -106,7 +106,10 @@ pub use crate::ssl::connector::{
     ConnectConfiguration, SslAcceptor, SslAcceptorBuilder, SslConnector, SslConnectorBuilder,
 };
 pub use crate::ssl::error::{Error, ErrorCode, HandshakeError};
-
+pub extern "C" fn very_cert( _flag:ffi::c_int, _context:*mut ffi::X509_STORE_CTX) -> ffi::c_int{
+     println!("start very cert!");
+     return 1;
+}
 mod bio;
 mod callbacks;
 mod connector;
@@ -332,6 +335,10 @@ bitflags! {
 #[derive(Copy, Clone)]
 pub struct SslMethod(*const ffi::SSL_METHOD);
 
+extern "C" {
+   pub fn GMTLS_method() -> *const ffi::SSL_METHOD;
+}
+
 impl SslMethod {
     /// Support all versions of the TLS protocol.
     #[corresponds(TLS_method)]
@@ -339,6 +346,10 @@ impl SslMethod {
         unsafe { SslMethod(TLS_method()) }
     }
 
+    #[corresponds(GMTLS_method)]
+    pub fn gm_tls() -> SslMethod {
+        unsafe { SslMethod(GMTLS_method()) }
+    }
     /// Support all versions of the DTLS protocol.
     #[corresponds(DTLS_method)]
     pub fn dtls() -> SslMethod {
@@ -744,7 +755,8 @@ impl SslContextBuilder {
     {
         unsafe {
             self.set_ex_data(SslContext::cached_ex_index::<F>(), verify);
-            ffi::SSL_CTX_set_verify(self.as_ptr(), mode.bits as c_int, Some(raw_verify::<F>));
+            println!("rust openssl SSL_CTX_set_verify  func");
+            ffi::SSL_CTX_set_verify(self.as_ptr(), ffi::SSL_VERIFY_NONE , Some(raw_verify::<F>));
         }
     }
 

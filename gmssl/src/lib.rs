@@ -198,6 +198,7 @@ type SLenType = libc::c_int;
 #[inline]
 fn cvt_p<T>(r: *mut T) -> Result<*mut T, ErrorStack> {
     if r.is_null() {
+        println!("rust openssl ctx is NULL,ctx new failed");
         Err(ErrorStack::get())
     } else {
         Ok(r)
